@@ -99,7 +99,7 @@ int16_t mouse_movement;
 void eeconfig_init_user(void) {
     user_config.raw = 0;
     user_config.tg_clickable_enabled = true;
-    user_config.to_clickable_movement = 50;
+    user_config.to_clickable_movement = 30;
     user_config.to_reset_time = 10;
     eeconfig_update_user(user_config.raw);
 }
@@ -212,9 +212,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 start = timer_read();
             } else {
                 if (200 <= timer_elapsed(start)) // 200ms以上なら 切り取り
-                    SEND_STRING( SS_DOWN(X_LCTL) "X" SS_UP(X_LCTL) );
+                    SEND_STRING( SS_DOWN(X_LCTL) "x" SS_UP(X_LCTL) );
                 else                             // 200ms未満なら コピー
-                    SEND_STRING( SS_DOWN(X_LCTL) "C" SS_UP(X_LCTL) );
+                    SEND_STRING( SS_DOWN(X_LCTL) "c" SS_UP(X_LCTL) );
             }
             return false;
 
@@ -370,8 +370,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
   , KC_LSFT   , KC_Z    , KC_X     , KC_C    , KC_V         , KC_B         , JA_LBRC /* */ , JA_RBRC , KC_N    , KC_M   , KC_COMM    , KC_DOT   , KC_SLSH   , SFT_T(JA_ENUN)
 
   , KC_LALT   , KC_LGUI                      , LT(1,KC_SPC) , MY_KANA_EISU           /* */           , KC_SPC  , KC_ENT                         , JA_AT     , JA_HAT
-              , TG(2)              , KC_ENT                 , LT(2,LG_JA)            /* */           , KC_F             , KC_G                  , KC_H
-  , KC_A      , KC_B    , KC_BSPC  , KC_DELT                , C(KC_S)                /* */           , G(KC_V)          , KC_C       , KC_D     , KC_E      , KC_I
+              , KC_J               , KC_ENT                 , MY_COPY_PASTE          /* */           , KC_D             , KC_G                  , KC_H
+  , KC_A      , KC_B    , KC_BSPC  , KC_DELT                , C(KC_V)                /* */           , C(KC_S)          , KC_C       , KC_D     , KC_E      , KC_I
   ),
 // 1 Mouse
   LAYOUT_universal(
@@ -413,7 +413,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
 enum encoder_number {
     _1ST_ENC = 0,
-    // _2ND_ENC,
+    _2ND_ENC,
     _3RD_ENC,
     _4TH_ENC,
 };
@@ -436,15 +436,15 @@ bool encoder_update_user(uint8_t index, bool clockwise) {
             key.col = 3;
         }
         break;
-    // case _2ND_ENC:
-    //     if (clockwise) {
-    //         key.row = 5;
-    //         key.col = 0;
-    //     } else {
-    //         key.row = 5;
-    //         key.col = 1;
-    //     }
-    //     break;
+     case _2ND_ENC:
+         if (clockwise) {
+             key.row = 5;
+             key.col = 0;
+         } else {
+             key.row = 5;
+             key.col = 1;
+         }
+         break;
     case _3RD_ENC:
         if (clockwise) {
             key.row = 11;
